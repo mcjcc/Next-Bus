@@ -19,13 +19,42 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Next Muni</title>
+    <style type="text/css">
+      #map{
+        display: flex;
+        justify-content: center;        
+      }
+      .svg-container{
+        border: 1px solid black;
+      }
+      #sf {
+        fill: #E5F5F9;
+        stroke: #2CA25F;
+        stroke-width: 0.5;
+      }
+      #axes {
+        stroke: #BDBDBD;
+        stroke-width: 0.5;
+      }
+
+      path {
+        fill: #ccc;
+        stroke: #fff;
+        stroke-linejoin: round;
+        stroke-width: 0.5;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+    <script src="%PUBLIC_URL%/GeoJSON/sfmaps/neighborhoods.json" type="application/json" charset="UTF-8"></script>
   </head>
   <body>
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+    <div id="map"></div>
     <div id="root"></div>
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -36,5 +65,65 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    
+    <script>
+          
+
+    // width and height of whole visualization
+    let width = 960;
+    let height = 700;
+
+    // Create SVG
+    let svg = d3.select('#map')              
+                .append('svg')
+                .attr('class', 'svg-container')
+                .attr('width', width)
+                .attr('height', height);
+  
+    d3.json("%PUBLIC_URL%/GeoJSON/sfmaps/neighborhoods.json", (error, geoData) => {
+      let center = d3.geoCentroid(geoData);
+      let scale = 300000;
+      let offset = [width/2, height/2];
+
+      let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
+      let path = d3.geoPath().projection( proj );
+      d3.select("svg").append("path")
+      .attr("d", path(geoData));
+    });
+
+    d3.json("%PUBLIC_URL%/GeoJSON/sfmaps/arteries.json", (error, geoData) => {
+      let center = d3.geoCentroid(geoData);
+      let scale = 300000;
+      let offset = [width/2, height/2];
+
+      let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
+      let path = d3.geoPath().projection( proj );
+      d3.select("svg").append("path")
+      .attr("d", path(geoData));
+    });
+
+    d3.json("%PUBLIC_URL%/GeoJSON/sfmaps/freeways.json", (error, geoData) => {
+      let center = d3.geoCentroid(geoData);
+      let scale = 300000;
+      let offset = [width/2, height/2];
+
+      let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
+      let path = d3.geoPath().projection( proj );
+      d3.select("svg").append("path")
+      .attr("d", path(geoData));
+    });
+    
+    d3.json("%PUBLIC_URL%/GeoJSON/sfmaps/streets.json", (error, geoData) => {
+      let center = d3.geoCentroid(geoData);
+      let scale = 300000;
+      let offset = [width/2, height/2];
+
+      let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
+      let path = d3.geoPath().projection( proj );
+      d3.select("svg").append("path")
+      .attr("d", path(geoData));
+    });
+
+    </script>
   </body>
 </html>
