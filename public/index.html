@@ -45,8 +45,8 @@
         stroke-width: 0.5;
       }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
-    <script src="%PUBLIC_URL%/GeoJSON/sfmaps/neighborhoods.json" type="application/json" charset="UTF-8"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script> -->
+    
   </head>
   <body>
     <noscript>
@@ -70,59 +70,59 @@
           
 
     // width and height of whole visualization
-    let width = 960;
-    let height = 700;
+    // let width = 960;
+    // let height = 700;
 
-    // Create SVG
-    let svg = d3.select('#map')              
-                .append('svg')
-                .attr('class', 'svg-container')
-                .attr('width', width)
-                .attr('height', height);
-  
-    d3.json("%PUBLIC_URL%/GeoJSON/sfmaps/neighborhoods.json", (error, geoData) => {
-      let center = d3.geoCentroid(geoData);
-      let scale = 300000;
-      let offset = [width/2, height/2];
+    // // Create SVG
+    // let svg = d3.select('#map')              
+    //             .append('svg')
+    //             .attr('class', 'svg-container')
+    //             .attr('width', width)
+    //             .attr('height', height);
 
-      let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
-      let path = d3.geoPath().projection( proj );
-      d3.select("svg").append("path")
-      .attr("d", path(geoData));
-    });
-
-    d3.json("%PUBLIC_URL%/GeoJSON/sfmaps/arteries.json", (error, geoData) => {
-      let center = d3.geoCentroid(geoData);
-      let scale = 300000;
-      let offset = [width/2, height/2];
-
-      let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
-      let path = d3.geoPath().projection( proj );
-      d3.select("svg").append("path")
-      .attr("d", path(geoData));
-    });
-
-    d3.json("%PUBLIC_URL%/GeoJSON/sfmaps/freeways.json", (error, geoData) => {
-      let center = d3.geoCentroid(geoData);
-      let scale = 300000;
-      let offset = [width/2, height/2];
-
-      let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
-      let path = d3.geoPath().projection( proj );
-      d3.select("svg").append("path")
-      .attr("d", path(geoData));
-    });
+    // let offset = [width/2, height/2];
+    // let scale = 300000;
     
-    d3.json("%PUBLIC_URL%/GeoJSON/sfmaps/streets.json", (error, geoData) => {
-      let center = d3.geoCentroid(geoData);
-      let scale = 300000;
-      let offset = [width/2, height/2];
+    // let base_map_path = "%PUBLIC_URL%/GeoJSON/sfmaps/base_map";
+    // let base_routes_path = "%PUBLIC_URL%/GeoJSON/sfmaps/routes";
+  
+    // d3.json(base_map_path + `/neighborhoods.json`, (error, geoData) => {
+    //   let center = d3.geoCentroid(geoData);
 
-      let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
-      let path = d3.geoPath().projection( proj );
-      d3.select("svg").append("path")
-      .attr("d", path(geoData));
-    });
+    //   let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
+    //   let path = d3.geoPath().projection( proj );
+    //   d3.select("svg").append("path")
+    //   .attr("d", path(geoData));
+    // });
+
+    // d3.json(base_map_path + `/arteries.json`, (error, geoData) => {
+    //   let center = d3.geoCentroid(geoData);
+      
+    //   let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
+    //   let path = d3.geoPath().projection( proj );
+    //   d3.select("svg").append("path")
+    //   .attr("d", path(geoData));
+    // });
+
+    // d3.json(base_map_path + `/freeways.json`, (error, geoData) => {
+    //   let center = d3.geoCentroid(geoData);
+
+    //   let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
+    //   let path = d3.geoPath().projection( proj );
+    //   d3.select("svg").append("path")
+    //   .attr("d", path(geoData));
+    // });
+    
+    // d3.json(base_map_path + `/streets.json`, (error, geoData) => {
+    //   let center = d3.geoCentroid(geoData);      
+
+    //   let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
+    //   let path = d3.geoPath().projection( proj );
+    //   d3.select("svg").append("path")
+    //   .attr("d", path(geoData));
+    // });
+
+    
 
     </script>
   </body>
