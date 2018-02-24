@@ -8,72 +8,22 @@ import freewaysData from '../GeoJSON/sfmaps/base_map/freeways.json';
 import neighborhoodsData from '../GeoJSON/sfmaps/base_map/neighborhoods.json';
 import streetsData from '../GeoJSON/sfmaps/base_map/streets.json';
 
-
+import { getVehicleLocations } from '../api_helpers/api_helpers';
+import { geoJSONConverter } from '../utils/geoJSONConverter';
 
 class Map extends Component {
   constructor(props) {
     super(props);
+
     this.createBaseMap = this.createBaseMap.bind(this);
   }
 
   componentWillMount() {
-    // this.createBaseMap();
+  
   }
 
   createBaseMap() {
-    let node = this.node;
-
-    // width and height of whole visualization
-    // let width = 960;
-    // let height = 700;
-
-    // Create SVG
-    // let svg = d3.select('#map')              
-    //             .append('svg')
-    //             .attr('class', 'svg-container')
-    //             .attr('width', width)
-    //             .attr('height', height);
-
-    // let offset = [width/2, height/2];
-    // let scale = 300000;
     
- 
-  
-    // d3.json(neighborhoodsData, (error, geoData) => {
-    //   let center = d3.geoCentroid(geoData);
-
-    //   let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
-    //   let path = d3.geoPath().projection( proj );
-    //   d3.select("svg").append("path")
-    //   .attr("d", path(geoData));
-    // });
-
-    // d3.json(base_map_path + `/arteries.json`, (error, geoData) => {
-    //   let center = d3.geoCentroid(geoData);
-      
-    //   let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
-    //   let path = d3.geoPath().projection( proj );
-    //   d3.select("svg").append("path")
-    //   .attr("d", path(geoData));
-    // });
-
-    // d3.json(base_map_path + `/freeways.json`, (error, geoData) => {
-    //   let center = d3.geoCentroid(geoData);
-
-    //   let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
-    //   let path = d3.geoPath().projection( proj );
-    //   d3.select("svg").append("path")
-    //   .attr("d", path(geoData));
-    // });
-    
-    // d3.json(base_map_path + `/streets.json`, (error, geoData) => {
-    //   let center = d3.geoCentroid(geoData);      
-
-    //   let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
-    //   let path = d3.geoPath().projection( proj );
-    //   d3.select("svg").append("path")
-    //   .attr("d", path(geoData));
-    // });
   }
   
   render() {
@@ -100,15 +50,20 @@ class Map extends Component {
         <path key={'path'+index} d={pathGenerator(data)} className='freeways' />
       )
     });
+
     let streets = streetsData.features.map((data, index) => {
       return (
         <path key={'path'+index} d={pathGenerator(data)} className='streets' />
       )
     });
+
+
     return (
       <svg ref={node => this.node = node} width={960} height={700}>
         {neighborhoods}
-       
+        {arteries}
+        {freeways}
+        {streets}
         <Routes />
       </svg>
     );    

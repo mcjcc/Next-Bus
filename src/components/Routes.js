@@ -16,21 +16,18 @@ class Routes extends Component {
 
 
   render() {
-
     let shownRoutes = Object.keys(this.state.routes).filter((key) => {
       return this.state.routes[key];
     });
     
     return (
-    <div>
-      Routes Container
-
+    <g className="Routes">
       {
         shownRoutes.map((route, idx) => {
-          return <Route key={idx} name={route} />;
+          return <Route key={idx} route={route} />;
         })
       }
-    </div>
+    </g>
     );
   }
 }

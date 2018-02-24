@@ -35,50 +35,26 @@ class Route extends Component {
     let width = 960;
     let height = 700;
     let offset = [width/2, height/2];
-    let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset ); 
-    let pathGenerator = d3.geoPath().projection( proj );
-    let vehicleLocationsData = geoJSONConverter(this.state.vehicleLocations);
-    console.log(vehicleLocationsData);
-    return vehicleLocationsData.features.map((data, index) => {
-      let center = data.geometry.coordinates      
-      let vehicle = d3.geoCircle().center(center).radius(5);
-      console.log(vehicle);
+    let proj = d3.geoMercator().scale(scale).center(center).translate(offset); 
+    let pathGenerator = d3.geoPath().projection(proj);
+
+    let { route } = this.props;
+    let { vehicleLocations } = this.state;
+    let vehicles = vehicleLocations.map((data, index) => {
+      let {lon, lat} = data;
+      let vehicle = d3.geoCircle().center([lon, lat]).radius(1);
+      let cx = proj([lon, lat])[0];
+      let cy = proj([lon, lat])[1];
       return (
-        <path key={'path'+index} d={pathGenerator(vehicle())} className='vehicle' />
+        <circle cx={cx} cy={cy} r="8px" fill="red" route={route}></circle>
       );
     });
+    return vehicles;
   }
 
-  render() {
-    // let scale = 300000;
-    // let center = d3.geoCentroid(neighborhoodsData);
-    // let width = 960;
-    // let height = 700;
-    // let offset = [width/2, height/2];
-    // let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset ); 
-    // let pathGenerator = d3.geoPath().projection( proj );
-    // let neighborhoods = neighborhoodsData.features.map((data, index) => {
-    //   return (
-    //     <path key={'path'+index} d={pathGenerator(data)} className='neighborhood' />
-    //   )
-    // });
-    // let arteries = arteriesData.features.map((data, index) => {
-    //   return (
-    //     <path key={'path'+index} d={pathGenerator(data)} className='neighborhood' />
-    //   )
-    // });
-    // let freeways = freewaysData.features.map((data, index) => {
-    //   return (
-    //     <path key={'path'+index} d={pathGenerator(data)} className='neighborhood' />
-    //   )
-    // });
-    // let streets = streetsData.features.map((data, index) => {
-    //   return (
-    //     <path key={'path'+index} d={pathGenerator(data)} className='neighborhood' />
-    //   )
-    // });
-    let { name } = this.props;
-    return this.renderVehicles();
+  render() {    
+    
+    return this.renderVehicles();    
   }
 }
 
