@@ -1,47 +1,59 @@
 import axios from 'axios';
 
 
-const nextbusURL = 'http://webservices.nextbus.com/service/publicJSONFeed';
-const agency = 'sf-muni';
+const NEXT_BUS_URL = 'http://webservices.nextbus.com/service/publicJSONFeed';
+const AGENCY = 'sf-muni';
 
 // retrieve all routes
 export const getRoutes = () => {
-  return axios.get(nextbusURL, {
+  return axios.get(NEXT_BUS_URL, {
     params: {
       command: 'routeList',
-      a: agency
+      a: AGENCY
     }
-  }).then(list => console.log(list));
+  }).then(response => {
+    console.log(response)
+  }).catch(err => {
+    console.log('api getRoutes error');
+  });
 }
 
 
 // retrieve route details e.g. path coordinates, stops
 export const getRouteDetails = (route) => {
-  return axios.get(nextbusURL, {
+  return axios.get(NEXT_BUS_URL, {
     params: {
       command: 'routeConfig',
       r: route,
-      a: agency
+      a: AGENCY
     }
-  }).then(data => {});
+  }).then(response => {
+    console.log(response);
+  }).catch(err => {
+    console.log('api getRouteDetails error');
+  });
 }
 
 
 // retrieve vehicle locations for a specific route @ at the current time when this function is called
-export const getVehicleLocations = (route) => {
-  let t = (new Date()).getTime(); // current Unix epoch time in milliseconds
-  return axios.get(nextbusURL, {
+export const getVehicles = (route) => {  
+  let time = 0;
+  console.log(route);
+  return axios.get(NEXT_BUS_URL, {
     params: {
       command: 'vehicleLocations',
-      r: route,
-      a: agency,
-      t: t
+      r: `${route}`,
+      a: AGENCY,
+      t: time
     }
-  }).then(data => {
+  }).then(response => {
     // return a list of coordinates
-    return data.vehicle.map(vehicle => {
-      let {lon, lat} = vehicle;
-      return {lon, lat};
-    })
+    let {data} = response;
+    return data.vehicle.map((vehicle) => {      
+      let {lon, lat, routeTag} = vehicle;
+      return {lon, lat, routeTag};
+    });
+  }).catch(err => {
+    console.log('api getVehicles error');
   });
 }

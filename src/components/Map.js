@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import g from '../utils/map';
 import * as d3 from 'd3';
 import Routes from './Routes';
 
@@ -8,22 +7,71 @@ import freewaysData from '../GeoJSON/sfmaps/base_map/freeways.json';
 import neighborhoodsData from '../GeoJSON/sfmaps/base_map/neighborhoods.json';
 import streetsData from '../GeoJSON/sfmaps/base_map/streets.json';
 
-import { getVehicleLocations } from '../api_helpers/api_helpers';
-import { geoJSONConverter } from '../utils/geoJSONConverter';
+import { getRoutes, getVehicles } from '../api_helpers/api_helpers';
+
+import { routes, vehicles } from './initialState.js';
 
 class Map extends Component {
   constructor(props) {
     super(props);
-
-    this.createBaseMap = this.createBaseMap.bind(this);
+    this.state = { routes, vehicles };
+           
+    this.renderRoutePicker = this.renderRoutePicker.bind(this);
+    this.toggleRoute = this.toggleRoute.bind(this);
+    this.fetchVehicles = this.fetchVehicles.bind(this);
   }
 
-  componentWillMount() {
-  
+  renderRoutePicker() {
+    let { routes } = this.state;       
+    let routesArr = Object.keys(routes);    
+    return routesArr.map((route, idx) => {
+      return(
+        <div key={`${route}-${idx}`}>
+            <input type="checkbox" id={route} onChange={() => {this.toggleRoute(route)}}/>
+            <label htmlFor={route}>{route}</label>          
+        </div>
+      );
+    })
   }
 
-  createBaseMap() {
-    
+  toggleRoute(route) {
+    let updatedState = {...this.state};
+    updatedState.routes[route] = !updatedState.routes[route];
+    if (updatedState.routes[route]) {
+      this.fetchVehicles(route).then(vehicles => {
+        updatedState.vehicles[route] = vehicles;
+        this.setState({updatedState});     
+      });
+    } else {
+      let vehicles = [];
+      updatedState.vehicles[route] = vehicles;
+      this.setState({updatedState});
+    }    
+  }
+
+  updateVehicles() {
+    // fetchVehicles on all routes that are showing
+    let { routes } = this.state;
+    let shownRoutes = Object.keys(routes).filter((key) => {
+      return routes[key];
+    });
+
+    setInterval( 
+      Promise.all(
+        shownRoutes.map(route => {
+          return this.fetchVehicles(route);
+        })
+      ).then(values => {
+        
+      })
+    , 15000);
+  }
+
+  fetchVehicles(route) {
+    return getVehicles(route)
+    .then(vehicles => {      
+      return vehicles;
+    });
   }
   
   render() {
@@ -57,15 +105,25 @@ class Map extends Component {
       )
     });
 
+    let { routes, vehicles } = this.state;
+    let shownRoutes = Object.keys(routes).filter((key) => {
+      return routes[key];
+    });
 
     return (
-      <svg ref={node => this.node = node} width={960} height={700}>
-        {neighborhoods}
-        {arteries}
-        {freeways}
-        {streets}
-        <Routes />
-      </svg>
+      <div>
+        <svg ref={node => this.node = node} width={960} height={700}>
+          {neighborhoods}
+          {arteries}
+          {freeways}
+          {streets}
+          <Routes routes={shownRoutes} vehicles={vehicles} />
+        </svg>
+        <div className="route-picker">
+          <h1>Select routes</h1>
+          {this.renderRoutePicker()}          
+        </div>
+      </div>
     );    
   }
 }
