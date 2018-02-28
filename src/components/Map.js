@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import Routes from './Routes';
+// import Routes from './Routes';
+import Route from './Route';
 
 import arteriesData from '../GeoJSON/sfmaps/base_map/arteries.json';
 import freewaysData from '../GeoJSON/sfmaps/base_map/freeways.json';
@@ -8,80 +9,60 @@ import neighborhoodsData from '../GeoJSON/sfmaps/base_map/neighborhoods.json';
 import streetsData from '../GeoJSON/sfmaps/base_map/streets.json';
 
 import { getRoutes, getVehicles } from '../api_helpers/api_helpers';
-
-import { routes, vehicles } from './initialState.js';
+import { routes } from './initialState.js';
 
 class Map extends Component {
   constructor(props) {
     super(props);
-    this.state = { routes, vehicles };
-           
+    this.state = { routes };
+
     this.renderRoutePicker = this.renderRoutePicker.bind(this);
     this.toggleRoute = this.toggleRoute.bind(this);
-    this.fetchVehicles = this.fetchVehicles.bind(this);
+    this.fetchInitialVehicles = this.fetchInitialVehicles.bind(this);
   }
 
   renderRoutePicker() {
-    let { routes } = this.state;       
-    let routesArr = Object.keys(routes);    
+    let { routes } = this.state;
+    let routesArr = Object.keys(routes);
     return routesArr.map((route, idx) => {
       return(
         <div key={`${route}-${idx}`}>
             <input type="checkbox" id={route} onChange={() => {this.toggleRoute(route)}}/>
-            <label htmlFor={route}>{route}</label>          
+            <label htmlFor={route}>{route}</label>
         </div>
       );
     })
   }
 
   toggleRoute(route) {
-    let updatedState = {...this.state};
-    updatedState.routes[route] = !updatedState.routes[route];
-    if (updatedState.routes[route]) {
-      this.fetchVehicles(route).then(vehicles => {
-        updatedState.vehicles[route] = vehicles;
-        this.setState({updatedState});     
-      });
+    let newState = {...this.state};
+    if (newState.routes[route].length) {
+      newState.routes[route] = [];
+      this.setState(newState);
     } else {
-      let vehicles = [];
-      updatedState.vehicles[route] = vehicles;
-      this.setState({updatedState});
-    }    
+      this.fetchInitialVehicles(route);
+    }
   }
 
-  updateVehicles() {
-    // fetchVehicles on all routes that are showing
-    let { routes } = this.state;
-    let shownRoutes = Object.keys(routes).filter((key) => {
-      return routes[key];
-    });
-
-    setInterval( 
-      Promise.all(
-        shownRoutes.map(route => {
-          return this.fetchVehicles(route);
-        })
-      ).then(values => {
-        
-      })
-    , 15000);
-  }
-
-  fetchVehicles(route) {
-    return getVehicles(route)
-    .then(vehicles => {      
-      return vehicles;
+  fetchInitialVehicles(route) {
+    let newState = {...this.state};
+    getVehicles(route)
+    .then(vehicles => {
+      newState.routes[route] = vehicles;
+      this.setState(newState);
     });
   }
-  
+
+
   render() {
+    console.log('inside render Map');
     let scale = 300000;
     let center = d3.geoCentroid(neighborhoodsData);
-    
+
     let width = 960;
     let height = 700;
     let offset = [width/2, height/2];
-    let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset ); 
+    let proj = d3.geoMercator().scale( scale ).center( center ).translate( offset );
     let pathGenerator = d3.geoPath().projection( proj );
     let neighborhoods = neighborhoodsData.features.map((data, index) => {
       return (
@@ -105,26 +86,34 @@ class Map extends Component {
       )
     });
 
-    let { routes, vehicles } = this.state;
+    let { routes } = this.state;
+
     let shownRoutes = Object.keys(routes).filter((key) => {
-      return routes[key];
+      return routes[key].length > 0;
     });
+
 
     return (
       <div>
-        <svg ref={node => this.node = node} width={960} height={700}>
-          {neighborhoods}
-          {arteries}
-          {freeways}
-          {streets}
-          <Routes routes={shownRoutes} vehicles={vehicles} />
-        </svg>
+        <div className="svg-container">
+          <svg ref={node => this.node = node} width={960} height={700}>
+            {neighborhoods}
+            {/* {arteries}
+            {freeways}
+            {streets} */}
+            {
+              shownRoutes.map((route, idx) => {
+                return <Route key={`${route}-${idx}`} route={route} vehicles={routes[route]}/>
+              })
+            }
+          </svg>
+        </div>
         <div className="route-picker">
           <h1>Select routes</h1>
-          {this.renderRoutePicker()}          
+          {this.renderRoutePicker()}
         </div>
       </div>
-    );    
+    );
   }
 }
 
