@@ -36,9 +36,8 @@ export const getRouteDetails = (route) => {
 
 
 // retrieve vehicle locations for a specific route @ at the current time when this function is called
-export const getVehicles = (route) => {  
+export const getVehicles = (route) => {
   let time = 0;
-  console.log(route);
   return axios.get(NEXT_BUS_URL, {
     params: {
       command: 'vehicleLocations',
@@ -49,7 +48,8 @@ export const getVehicles = (route) => {
   }).then(response => {
     // return a list of coordinates
     let {data} = response;
-    return data.vehicle.map((vehicle) => {      
+    let {vehicle = []} = data;
+    return vehicle.map((vehicle) => {
       let {lon, lat, routeTag} = vehicle;
       return {lon, lat, routeTag};
     });
