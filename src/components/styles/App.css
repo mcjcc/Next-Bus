@@ -1,17 +1,19 @@
 .App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-route-picker-container {
+  display: flex;
+}
+
+.route-picker{
+  width: 250px;
+  height: 900px;
+  overflow-y: scroll;
   text-align: center;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-.svg-container{
-  border: 1px solid black;
 }
 
 path {

@@ -7,7 +7,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Map />    
+        <h1>Real-Time MUNI Vehicle Locator</h1>
+        <Map />
       </div>
     );
   }
