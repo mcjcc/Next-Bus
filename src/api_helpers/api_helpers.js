@@ -49,6 +49,12 @@ export const getVehicles = (route) => {
     // return a list of coordinates
     let {data} = response;
     let {vehicle = []} = data;
+
+    // if theres only 1 vehicle, api returns vehicle as a single object instead of an array
+    if(!(vehicle instanceof Array)) {
+      vehicle = [vehicle];
+    }
+
     return vehicle.map((vehicle) => {
       let {lon, lat, routeTag} = vehicle;
       return {lon, lat, routeTag};
