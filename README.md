@@ -17,7 +17,7 @@ You can find the most recent version of this guide [here](https://github.com/fac
 ## How to Run The Project on Local Environment
 
 In the project directory, if it's the first time building the project, run
-`npm build` and then `npm start`
+`npm install` and then `npm start`
 
 ## Available Scripts
 
