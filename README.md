@@ -13,7 +13,6 @@ You can find the most recent version of this guide [here](https://github.com/fac
   - [npm start](#npm-start)
   - [npm run build](#npm-run-build)
   - [npm run eject](#npm-run-eject)
-- [Supported Browsers](#supported-browsers)
 
 
 ## Available Scripts
