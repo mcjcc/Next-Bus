@@ -53,5 +53,6 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 ## Todos
 - Add route highlighting when user selects a route
-  - Display Stop locations along route
-  - Display Vehicle headings
+  - Display stop locations along route
+- Display vehicle headings
+- Smooth vehicle position transitions
