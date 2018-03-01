@@ -21,28 +21,28 @@ let pathGenerator = d3.geoPath().projection( projection );
 const neighborhoods = neighborhoodsData.features.map((data, index) => {
   return (
     <path key={'path'+index} d={pathGenerator(data)} className='neighborhood' />
-  )
+  );
 });
 
 // returns arteries svg paths
 const arteries = arteriesData.features.map((data, index) => {
   return (
     <path key={'path'+index} d={pathGenerator(data)} className='arteries' />
-  )
+  );
 });
 
 // returns freeways svg paths
 const freeways = freewaysData.features.map((data, index) => {
   return (
     <path key={'path'+index} d={pathGenerator(data)} className='freeways' />
-  )
+  );
 });
 
 // returns streets svg paths
 const streets = streetsData.features.map((data, index) => {
   return (
     <path key={'path'+index} d={pathGenerator(data)} className='streets' />
-  )
+  );
 });
 
 export {

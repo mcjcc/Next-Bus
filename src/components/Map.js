@@ -27,6 +27,17 @@ class Map extends Component {
     })
   }
 
+  renderMap() {
+    return (
+      <g>
+        {neighborhoods}
+        {arteries}
+        {freeways}
+        {streets}
+      </g>
+    );
+  }
+
   toggleRoute(route) {
     let newState = {...this.state};
     if (newState.routes[route].length) {
@@ -44,17 +55,6 @@ class Map extends Component {
       newState.routes[route] = vehicles;
       this.setState(newState);
     });
-  }
-
-  renderMap() {
-    return (
-      <g>
-        {neighborhoods}
-        {arteries}
-        {freeways}
-        {streets}
-      </g>
-    );
   }
 
   render() {

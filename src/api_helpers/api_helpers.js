@@ -1,5 +1,5 @@
+// nextbus api documentation: https://www.nextbus.com/xmlFeedDocs/NextBusXMLFeed.pdf
 import axios from 'axios';
-
 
 const NEXT_BUS_URL = 'http://webservices.nextbus.com/service/publicJSONFeed';
 const AGENCY = 'sf-muni';

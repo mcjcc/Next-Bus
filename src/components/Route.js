@@ -29,7 +29,7 @@ class Route extends Component {
       .then(vehicles => {
         this.setState({
           vehicles: vehicles
-        })
+        });
       });
   }
 
@@ -37,7 +37,7 @@ class Route extends Component {
   updateVehicles(route) {
     this.update = setInterval(() => {
       console.log('15 seconds');
-      this.fetchVehicles(route)
+      this.fetchVehicles(route);
     }, 15000);
   }
 
