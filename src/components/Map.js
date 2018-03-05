@@ -2,16 +2,29 @@ import React, { Component } from 'react';
 
 import Route from './Route';
 
-import { getVehicles } from '../api_helpers/api_helpers';
-import { routes } from './initialState.js';
+import { getRoutes, getVehicles } from '../api_helpers/api_helpers';
+
 import { width, height, neighborhoods, arteries, freeways, streets } from '../utils/map.js';
 
 class Map extends Component {
   constructor(props) {
     super(props);
-    this.state = { routes };
+    this.state = {
+      loading: true,
+      routes: {}
+    }
 
     this.toggleRoute = this.toggleRoute.bind(this);
+  }
+
+  componentWillMount() {
+    getRoutes()
+    .then(routes => {
+      this.setState({
+        loading: false,
+        routes
+      });
+    });
   }
 
   renderRoutePicker() {
@@ -58,30 +71,39 @@ class Map extends Component {
   }
 
   render() {
-    let { routes } = this.state;
-    let shownRoutes = Object.keys(routes).filter((key) => {
-      return routes[key].length > 0;
-    });
+    let { loading } = this.state;
 
-    return (
-      <div className="map-route-picker-container">
-        <div className="route-picker">
-          <h1>Select routes</h1>
-          <p>Selected routes update every 15 seconds</p>
-          {this.renderRoutePicker()}
+    if (loading) {
+      return (
+        <div>Loading...</div>
+      );
+    } else {
+      console.log(this.state);
+      let { routes } = this.state;
+      let shownRoutes = Object.keys(routes).filter((key) => {
+        return routes[key].length > 0;
+      });
+
+      return (
+        <div className="map-route-picker-container">
+          <div className="route-picker">
+            <h1>Select routes</h1>
+            <p>Selected routes update every 15 seconds</p>
+            {this.renderRoutePicker()}
+          </div>
+          <div className="svg-map-routes-container">
+            <svg width={width} height={height}>
+              {this.renderMap()}
+              {
+                shownRoutes.map((route, idx) => {
+                  return <Route key={`${route}-${idx}`} route={route} vehicles={routes[route]}/>
+                })
+              }
+            </svg>
+          </div>
         </div>
-        <div className="svg-map-routes-container">
-          <svg width={width} height={height}>
-            {this.renderMap()}
-            {
-              shownRoutes.map((route, idx) => {
-                return <Route key={`${route}-${idx}`} route={route} vehicles={routes[route]}/>
-              })
-            }
-          </svg>
-        </div>
-      </div>
-    );
+      );
+    }
   }
 }
 

@@ -12,7 +12,15 @@ export const getRoutes = () => {
       a: AGENCY
     }
   }).then(response => {
-    console.log(response)
+    console.log(response);
+    let { data } = response;
+    let { route } = data;
+    let routes = {};
+    route.forEach(route => {
+      let { tag } = route;
+      routes[tag] = [];
+    });
+    return routes;
   }).catch(err => {
     console.log('api getRoutes error');
   });

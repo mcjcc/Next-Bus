@@ -7,7 +7,7 @@ import freewaysData from '../GeoJSON/sfmaps/base_map/freeways.json';
 import neighborhoodsData from '../GeoJSON/sfmaps/base_map/neighborhoods.json';
 import streetsData from '../GeoJSON/sfmaps/base_map/streets.json';
 
-let scale = 350000;
+let scale = 310000;
 let center = d3.geoCentroid(neighborhoodsData);
 
 let width = 1000;
